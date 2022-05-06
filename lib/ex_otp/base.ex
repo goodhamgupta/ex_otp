@@ -9,10 +9,10 @@ defmodule ExOtp.Base do
   use Bitwise
 
   @keys [
-    :digits,
-    :digest,
     :secret,
-    :issuer,
+    digits: 6,
+    digest: :sha,
+    issuer: nil,
     name: "secret"
   ]
 
@@ -21,10 +21,11 @@ defmodule ExOtp.Base do
   @max_padding 8
 
   @type t :: %__MODULE__{
+          secret: String.t(),
           digits: Integer.t(),
           digest: atom(),
-          name: String.t(),
-          issuer: String.t()
+          issuer: String.t(),
+          name: String.t()
         }
 
   def validate(%__MODULE__{digest: digest}) when is_nil(digest) do
