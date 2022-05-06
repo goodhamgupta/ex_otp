@@ -51,7 +51,7 @@ defmodule ExOtp.Base do
   end
 
   def generate_otp(%__MODULE__{} = base, input) when is_integer(input) do
-    secret = byte_secret(base, rem(String.length(base.secret), @max_padding))
+    {:ok, secret} = byte_secret(base, rem(String.length(base.secret), @max_padding))
 
     code =
       :hmac
@@ -59,7 +59,9 @@ defmodule ExOtp.Base do
       |> :binary.bin_to_list()
       |> generate_code(base)
 
-    if String.length(code) < base.digits do
+    num_digits = code |> Integer.digits() |> length()
+
+    if num_digits < base.digits do
       "0#{code}"
     else
       code
@@ -74,11 +76,12 @@ defmodule ExOtp.Base do
         Enum.fetch!(bin_list, offset + index)
       end)
 
-    (zero && 0x7F) <<< 24
-    |> Bitwise.bor((one && 0xFF) <<< 16)
-    |> Bitwise.bor((two && 0xFF) <<< 8)
-    |> Bitwise.bor(three && 0xFF)
-    |> rem(:math.pow(10, base.digits))
+
+    (zero &&& 0x7F) <<< 24
+    |> Bitwise.bor((one &&& 0xFF) <<< 16)
+    |> Bitwise.bor((two &&& 0xFF) <<< 8)
+    |> Bitwise.bor(three &&& 0xFF)
+    |> rem(:math.pow(10, base.digits) |> round())
   end
 
   def byte_secret(%__MODULE__{} = base, missing_padding) when missing_padding == 0 do
