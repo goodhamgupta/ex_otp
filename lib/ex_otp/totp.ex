@@ -32,13 +32,13 @@ defmodule ExOtp.Totp do
   end
 
   def now(%Totp{} = totp) do
-    at(totp, DateTime.utc_now())
+    at(totp, DateTime.utc_now() |> DateTime.to_unix())
   end
 
-  def verify(%Totp{} = totp, otp, for_time \\ DateTime.utc_now(), valid_window \\ 0) do
+  def valid?(%Totp{} = totp, otp, for_time \\ DateTime.utc_now(), valid_window \\ 0) do
     if valid_window do
       Enum.any?(-valid_window..valid_window, fn index ->
-        otp == at(totp, for_time, index)
+        otp == at(totp, DateTime.to_unix(for_time), index)
       end)
     end
   end
