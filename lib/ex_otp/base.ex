@@ -64,7 +64,7 @@ defmodule ExOtp.Base do
     if num_digits < base.digits do
       "0#{code}"
     else
-      code
+      "#{code}"
     end
   end
 
@@ -75,7 +75,6 @@ defmodule ExOtp.Base do
       Enum.map(0..3, fn index ->
         Enum.fetch!(bin_list, offset + index)
       end)
-
 
     (zero &&& 0x7F) <<< 24
     |> Bitwise.bor((one &&& 0xFF) <<< 16)
