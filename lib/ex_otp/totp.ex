@@ -37,4 +37,8 @@ defmodule ExOtp.Totp do
   def at(_, _) do
     raise Errors.InvalidParam, "interval should be an integer or DateTime value"
   end
+
+  def now(%Totp{} = totp) do
+    at(totp, DateTime.utc_now())
+  end
 end
