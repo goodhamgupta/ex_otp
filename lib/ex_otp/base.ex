@@ -69,7 +69,7 @@ defmodule ExOtp.Base do
   end
 
   @spec generate_code(list(Integer.t()), ExOtp.Base.t()) :: non_neg_integer
-  def generate_code(bin_list, %__MODULE__{digits: digits}) do
+  defp generate_code(bin_list, %__MODULE__{digits: digits}) do
     offset = Enum.fetch!(bin_list, -1) &&& 0xF
 
     [zero, one, two, three] =
@@ -81,24 +81,27 @@ defmodule ExOtp.Base do
     |> Bitwise.bor((one &&& 0xFF) <<< 16)
     |> Bitwise.bor((two &&& 0xFF) <<< 8)
     |> Bitwise.bor(three &&& 0xFF)
-    |> rem(:math.pow(10, digits) |> round()) # Round is required to convert float to integer
+    # Round is required to convert float to integer
+    |> rem(:math.pow(10, digits) |> round())
   end
 
-  def byte_secret(%__MODULE__{secret: secret}, missing_padding) when missing_padding == 0 do
+  # Private API
+
+  defp byte_secret(%__MODULE__{secret: secret}, missing_padding) when missing_padding == 0 do
     ElixirBase.decode32("#{secret}")
   end
 
-  def byte_secret(%__MODULE__{secret: secret}, missing_padding) when missing_padding > 0 do
+  defp byte_secret(%__MODULE__{secret: secret}, missing_padding) when missing_padding > 0 do
     padding = String.duplicate("=", @max_padding - missing_padding)
     ElixirBase.decode32("#{secret}#{padding}")
   end
 
-  def int_to_binary(input) do
+  defp int_to_binary(input) do
     do_byte_generation(input)
   end
 
   @spec do_byte_generation(any, any) :: any
-  def do_byte_generation(input, result \\ <<>>) do
+  defp do_byte_generation(input, result \\ <<>>) do
     if input == 0 do
       pad = @max_padding - byte_size(result)
       <<0::pad*8, result::binary>>
