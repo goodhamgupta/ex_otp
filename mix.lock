@@ -1,3 +1,2 @@
 %{
-  "base32": {:hex, :base32, "0.1.0", "044f6dc95709727ca2176f3e97a41ddaa76b5bc690d3536908618c0cb32616a2", [:rebar3], [], "hexpm", "10a73951d857d8cb1eceea8eb96c6941f6a76e105947ad09c2b73977dee07638"},
 }

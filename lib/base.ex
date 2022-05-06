@@ -4,6 +4,7 @@ defmodule ExOtp.Base do
   """
 
   alias ExOtp.Errors
+  alias Base, as: ElixirBase
   alias __MODULE__
 
   use Bitwise
@@ -18,7 +19,7 @@ defmodule ExOtp.Base do
 
   defstruct @keys
 
-  @MAX_PADDING 8
+  @max_padding 8
 
   @type t :: %__MODULE__{
           digits: Integer.t(),
@@ -40,25 +41,41 @@ defmodule ExOtp.Base do
     raise Errors.InvalidParam, "digits cannot be less than 0."
   end
 
+  def validate(base), do: base
+
+  def generate_otp(_base, input) when input < 0 do
+    raise Errors.InvalidParam, "input must be a positive integer"
+  end
+
   def generate_otp(_base, input) when not is_integer(input) do
     raise Errors.InvalidParam, "input must be an integer."
   end
 
   def generate_otp(%Base{} = base, input) when is_integer(input) do
-    _secret = byte_secret(base, rem(String.length(base.secret), @MAX_PADDING))
+    secret = byte_secret(base, rem(String.length(base.secret), @max_padding))
+    :crypto.mac(:hmac, base.digest, secret, input)
   end
 
-  defp byte_secret(%Base{} = base, missing_padding) when missing_padding == 0 do
-    :base32.decode("#{base.secret}")
+  def byte_secret(%Base{} = base, missing_padding) when missing_padding == 0 do
+    ElixirBase.decode32("#{base.secret}")
   end
 
-  defp byte_secret(%Base{} = base, missing_padding) when missing_padding > 0 do
-    padding = String.duplicate('=', @MAX_PADDING - missing_padding)
-    :base32.decode("#{base.secret}#{padding}")
+  def byte_secret(%Base{} = base, missing_padding) when missing_padding > 0 do
+    padding = String.duplicate("=", @max_padding - missing_padding)
+    ElixirBase.decode32("#{base.secret}#{padding}")
   end
 
-  defp int_to_bytestring(input, padding \\ @MAX_PADDING) do
+  def int_to_binary(input, padding \\ @max_padding) do
     do_byte_generation(input)
+  end
 
+  @spec do_byte_generation(any, any) :: any
+  def do_byte_generation(input, result \\ <<>>) do
+    if input == 0 do
+      pad = @max_padding - byte_size(result)
+      <<0::pad*8, result::binary>>
+    else
+      do_byte_generation(input >>> 8, <<input &&& 0xFF::utf8>> <> result)
+    end
   end
 end
