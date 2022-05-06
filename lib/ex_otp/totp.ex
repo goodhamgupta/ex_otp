@@ -26,19 +26,20 @@ defmodule ExOtp.Totp do
 
   def validate(totp), do: totp
 
-  def at(%Totp{base: base, interval: interval}, for_time) when is_integer(for_time) do
-    Base.generate_otp(base, (for_time / interval) |> round())
-  end
-
-  def at(%Totp{base: base, interval: interval}, %DateTime{} = for_time) do
-    Base.generate_otp(base, (DateTime.to_unix(for_time) / interval) |> round())
-  end
-
-  def at(_, _) do
-    raise Errors.InvalidParam, "interval should be an integer or DateTime value"
+  def at(%Totp{base: base, interval: interval}, for_time, counter \\ 0)
+      when is_integer(for_time) do
+    Base.generate_otp(base, (for_time / interval) |> round() |> Kernel.+(counter))
   end
 
   def now(%Totp{} = totp) do
     at(totp, DateTime.utc_now())
+  end
+
+  def verify(%Totp{} = totp, otp, for_time \\ DateTime.utc_now(), valid_window \\ 0) do
+    if valid_window do
+      Enum.any?(-valid_window..valid_window, fn index ->
+        otp == at(totp, for_time, index)
+      end)
+    end
   end
 end
