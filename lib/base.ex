@@ -5,7 +5,6 @@ defmodule ExOtp.Base do
 
   alias ExOtp.Errors
   alias Base, as: ElixirBase
-  alias __MODULE__
 
   use Bitwise
 
@@ -51,21 +50,47 @@ defmodule ExOtp.Base do
     raise Errors.InvalidParam, "input must be an integer."
   end
 
-  def generate_otp(%Base{} = base, input) when is_integer(input) do
+  def generate_otp(%__MODULE__{} = base, input) when is_integer(input) do
     secret = byte_secret(base, rem(String.length(base.secret), @max_padding))
-    :crypto.mac(:hmac, base.digest, secret, input)
+
+    code =
+      :hmac
+      |> :crypto.mac(base.digest, secret, int_to_binary(input))
+      |> :binary.bin_to_list()
+      |> generate_code(base)
+
+    if String.length(code) < base.digits do
+      "0#{code}"
+    else
+      code
+    end
   end
 
-  def byte_secret(%Base{} = base, missing_padding) when missing_padding == 0 do
+  def generate_code(bin_list, base) do
+    offset = Enum.fetch!(bin_list, -1) &&& 0xF
+
+    [zero, one, two, three] =
+      Enum.map(0..3, fn index ->
+        Enum.fetch!(bin_list, offset + index)
+      end)
+
+    (zero && 0x7F) <<< 24
+    |> Bitwise.bor((one && 0xFF) <<< 16)
+    |> Bitwise.bor((two && 0xFF) <<< 8)
+    |> Bitwise.bor(three && 0xFF)
+    |> rem(:math.pow(10, base.digits))
+  end
+
+  def byte_secret(%__MODULE__{} = base, missing_padding) when missing_padding == 0 do
     ElixirBase.decode32("#{base.secret}")
   end
 
-  def byte_secret(%Base{} = base, missing_padding) when missing_padding > 0 do
+  def byte_secret(%__MODULE__{} = base, missing_padding) when missing_padding > 0 do
     padding = String.duplicate("=", @max_padding - missing_padding)
     ElixirBase.decode32("#{base.secret}#{padding}")
   end
 
-  def int_to_binary(input, padding \\ @max_padding) do
+  def int_to_binary(input) do
     do_byte_generation(input)
   end
 
