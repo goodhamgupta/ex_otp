@@ -49,10 +49,10 @@ defmodule ExOtp.Totp do
   def valid?(%Totp{} = totp, otp, for_time \\ DateTime.utc_now(), valid_window \\ 0) do
     if valid_window do
       Enum.any?(-valid_window..valid_window, fn index ->
-        otp == at(totp, DateTime.to_unix(for_time), index)
+        otp == at(totp, for_time, index)
       end)
     else
-      otp == at(totp, DateTime.to_unix(for_time))
+      otp == at(totp, for_time)
     end
   end
 end

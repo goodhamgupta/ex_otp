@@ -28,4 +28,4 @@ Dashbit also has an amazing library for generating OTP's called [nimble_totp](ht
 
 # Credits
 - [PyOTP](https://github.com/pyauth/pyotp) - The API and implementation is largely based on PyOTP.
-- [nimble_totp](https://github.com/dashbitco/nimble_totp) - Generally, I used this library to check the correctness of my implementation :) I also aim to add benchmarks tests comparing our libraries in the future!
+- [Nimble TOTP](https://github.com/dashbitco/nimble_totp) - Generally, I used this library to check the correctness of my implementation :) I also aim to add benchmarks tests comparing our libraries in the future!
