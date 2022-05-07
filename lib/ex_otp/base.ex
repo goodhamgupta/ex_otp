@@ -43,6 +43,7 @@ defmodule ExOtp.Base do
 
   def validate(base), do: base
 
+  @spec generate_otp(ExOtp.Base.t(), integer) :: no_return() | String.t()
   def generate_otp(_base, input) when input < 0 do
     raise Errors.InvalidParam, "input must be a positive integer"
   end
