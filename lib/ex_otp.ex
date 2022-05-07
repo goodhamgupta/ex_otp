@@ -42,4 +42,14 @@ defmodule ExOtp do
   def valid_hotp?(%Hotp{} = hotp, otp, counter) do
     Hotp.valid?(hotp, otp, counter)
   end
+
+  @spec provision_uri_totp(Totp.t(), String.t(), keyword) :: String.t()
+  def provision_uri_totp(totp, label, opts \\ []) do
+    Totp.provision_uri(totp, label, opts)
+  end
+
+  @spec provision_uri_hotp(Hotp.t(), String.t(), keyword) :: String.t()
+  def provision_uri_hotp(hotp, label, opts \\ []) do
+    Hotp.provision_uri(hotp, label, opts)
+  end
 end

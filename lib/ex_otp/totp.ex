@@ -55,4 +55,10 @@ defmodule ExOtp.Totp do
       otp == at(totp, for_time)
     end
   end
+
+  @spec provision_uri(t(), String.t(), keyword()) :: String.t()
+  def provision_uri(%Totp{} = totp, label, opts \\ []) do
+    params = [{:secret, totp.base.secret} | opts]
+    "otpauth://totp/#{label}?#{URI.encode_query(params, :rfc3986)}"
+  end
 end

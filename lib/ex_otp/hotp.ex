@@ -46,4 +46,10 @@ defmodule ExOtp.Hotp do
   def valid?(%Hotp{} = hotp, otp, counter) do
     otp == at(hotp, counter)
   end
+
+  @spec provision_uri(t(), String.t(), keyword()) :: String.t()
+  def provision_uri(%Hotp{} = hotp, label, opts \\ []) do
+    params = [{:secret, hotp.base.secret} | opts]
+    "otpauth://hotp/#{label}?#{URI.encode_query(params, :rfc3986)}"
+  end
 end

@@ -11,9 +11,7 @@ defmodule ExOtp.Base do
   @keys [
     :secret,
     digits: 6,
-    digest: :sha,
-    issuer: nil,
-    name: "secret"
+    digest: :sha
   ]
 
   defstruct @keys
@@ -23,9 +21,7 @@ defmodule ExOtp.Base do
   @type t :: %__MODULE__{
           secret: String.t(),
           digits: Integer.t(),
-          digest: atom(),
-          issuer: String.t(),
-          name: String.t()
+          digest: atom()
         }
 
   def new(secret) do
