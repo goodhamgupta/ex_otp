@@ -20,6 +20,11 @@ defmodule ExOtp.Hotp do
           base: Base.t()
         }
 
+  @spec new(integer(), String.t()) :: t()
+  def new(initial_count, secret) do
+    %Hotp{initial_count: initial_count, base: Base.new(secret)}
+  end
+
   @spec validate(t()) :: no_return() | t()
   def validate(%Hotp{initial_count: initial_count}) when not is_integer(initial_count) do
     raise Errors.InvalidParam, "initial_count should be an integer"

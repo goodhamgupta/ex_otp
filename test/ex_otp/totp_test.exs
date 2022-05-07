@@ -21,4 +21,28 @@ defmodule ExOtp.Totp.Test do
 
     assert otp
   end
+
+  test "returns true if given otp is valid" do
+    totp =
+      30
+      |> Totp.new("secret_key")
+      |> Totp.validate()
+
+    time = ~U[2022-05-07 03:33:12.469370Z]
+    otp = Totp.at(totp, time |> DateTime.to_unix())
+
+    assert Totp.valid?(totp, otp, time)
+  end
+
+  test "returns false if given otp is invalid" do
+    totp =
+      30
+      |> Totp.new("secret_key")
+      |> Totp.validate()
+
+    time = ~U[2022-05-07 03:33:12.469370Z]
+    otp = "123456"
+
+    assert not Totp.valid?(totp, otp, time)
+  end
 end
