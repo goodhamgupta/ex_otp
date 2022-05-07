@@ -28,6 +28,13 @@ defmodule ExOtp.Base do
           name: String.t()
         }
 
+  def new(secret) do
+    %__MODULE__{secret: Base.encode32(secret)}
+  end
+
+  @doc """
+  Function to validate the attributes for the Base struct.
+  """
   def validate(%__MODULE__{digest: digest}) when is_nil(digest) do
     raise Errors.InvalidParam,
           "digest cannot be blank. Should be one of: md5, sha1, sha256, sha512"
@@ -43,6 +50,9 @@ defmodule ExOtp.Base do
 
   def validate(base), do: base
 
+  @doc """
+  Function to generate the OTP, given an input.
+  """
   @spec generate_otp(ExOtp.Base.t(), integer) :: no_return() | String.t()
   def generate_otp(_base, input) when input < 0 do
     raise Errors.InvalidParam, "input must be a positive integer"
@@ -80,9 +90,9 @@ defmodule ExOtp.Base do
       end)
 
     (zero &&& 0x7F) <<< 24
-    |> Bitwise.bor((one &&& 0xFF) <<< 16)
-    |> Bitwise.bor((two &&& 0xFF) <<< 8)
-    |> Bitwise.bor(three &&& 0xFF)
+    |> bor((one &&& 0xFF) <<< 16)
+    |> bor((two &&& 0xFF) <<< 8)
+    |> bor(three &&& 0xFF)
     # Round is required to convert float to integer
     |> rem(:math.pow(10, digits) |> round())
   end

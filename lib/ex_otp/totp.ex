@@ -20,9 +20,9 @@ defmodule ExOtp.Totp do
           base: Base.t()
         }
 
-  @spec new(integer) :: t()
-  def new(interval) do
-    %Totp{interval: interval, base: %Base{}}
+  @spec new(integer, String.t()) :: t()
+  def new(interval, secret) do
+    %Totp{interval: interval, base: Base.new(secret)}
   end
 
   @spec validate(t()) :: no_return() | t()
