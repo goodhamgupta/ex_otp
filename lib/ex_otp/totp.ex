@@ -32,15 +32,16 @@ defmodule ExOtp.Totp do
 
   def validate(totp), do: totp
 
-  @spec at(t(), integer, integer) :: String.t()
-  def at(%Totp{base: base, interval: interval}, for_time, counter \\ 0)
-      when is_integer(for_time) do
-    Base.generate_otp(base, (for_time / interval) |> round() |> Kernel.+(counter))
-  end
-
-  @spec now(t()) :: String.t()
-  def now(%Totp{} = totp) do
-    at(totp, DateTime.utc_now() |> DateTime.to_unix())
+  @spec at(t(), DateTime.t(), integer) :: String.t()
+  def at(%Totp{base: base, interval: interval}, for_time, counter \\ 0) do
+    Base.generate_otp(
+      base,
+      for_time
+      |> DateTime.to_unix()
+      |> Kernel./(interval)
+      |> round()
+      |> Kernel.+(counter)
+    )
   end
 
   # TODO: Change the comparison to be Timing-Attack Safe.

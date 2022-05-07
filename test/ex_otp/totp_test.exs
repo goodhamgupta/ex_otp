@@ -12,16 +12,6 @@ defmodule ExOtp.Totp.Test do
     assert otp == "446933"
   end
 
-  test "generates otp for current time" do
-    otp =
-      30
-      |> Totp.new("secret_key")
-      |> Totp.validate()
-      |> Totp.now()
-
-    assert otp
-  end
-
   test "returns true if given otp is valid" do
     totp =
       30
