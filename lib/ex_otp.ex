@@ -52,4 +52,13 @@ defmodule ExOtp do
   def provision_uri_hotp(hotp, label, opts \\ []) do
     Hotp.provision_uri(hotp, label, opts)
   end
+
+  def generate_qr_code(input) do
+    unless Code.ensure_loaded?(EQRCode) do
+      raise Errors.MissingDependency,
+            "Please install the optional depndency EQRCode to generate the QR code"
+    end
+
+    input |> EQRCode.encode() |> EQRCode.svg()
+  end
 end

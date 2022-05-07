@@ -1,2 +1,3 @@
 %{
+  "eqrcode": {:hex, :eqrcode, "0.1.10", "6294fece9d68ad64eef1c3c92cf111cfd6469f4fbf230a2d4cc905a682178f3f", [:mix], [], "hexpm", "da30e373c36a0fd37ab6f58664b16029919896d6c45a68a95cc4d713e81076f1"},
 }
