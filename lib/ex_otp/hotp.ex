@@ -5,7 +5,7 @@ defmodule ExOtp.Hotp do
 
   @behaviour ExOtp.Behaviour
 
-  alias ExOtp.{Base, Errors}
+  alias ExOtp.Errors
   alias __MODULE__
 
   @keys [
@@ -19,12 +19,12 @@ defmodule ExOtp.Hotp do
 
   @type t :: %__MODULE__{
           initial_count: Integer.t(),
-          base: Base.t()
+          base: ExOtp.Base.t()
         }
 
   @spec new(integer(), String.t()) :: t()
   def new(initial_count, secret) do
-    %Hotp{initial_count: initial_count, base: Base.new(secret)}
+    %Hotp{initial_count: initial_count, base: ExOtp.Base.new(secret)}
   end
 
   @spec validate(t()) :: no_return() | t()
@@ -36,7 +36,7 @@ defmodule ExOtp.Hotp do
 
   @spec at(ExOtp.Hotp.t(), integer) :: no_return() | String.t()
   def at(%Hotp{} = hotp, count) when is_integer(count) do
-    Base.generate_otp(hotp.base, hotp.initial_count + count)
+    ExOtp.Base.generate_otp(hotp.base, hotp.initial_count + count)
   end
 
   def at(_, _) do
@@ -51,7 +51,7 @@ defmodule ExOtp.Hotp do
 
   @spec provision_uri(t(), String.t(), keyword()) :: String.t()
   def provision_uri(%Hotp{} = hotp, label, opts \\ []) do
-    params = [{:secret, hotp.base.secret} | opts]
+    params = [{:secret, Base.decode32!(hotp.base.secret)} | opts]
     "otpauth://hotp/#{label}?#{URI.encode_query(params, :rfc3986)}"
   end
 end

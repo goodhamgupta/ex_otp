@@ -5,7 +5,7 @@ defmodule ExOtp.Totp do
 
   @behaviour ExOtp.Behaviour
 
-  alias ExOtp.{Base, Errors}
+  alias ExOtp.Errors
   alias __MODULE__
 
   @keys [
@@ -19,12 +19,12 @@ defmodule ExOtp.Totp do
 
   @type t :: %__MODULE__{
           interval: Integer.t(),
-          base: Base.t()
+          base: ExOtp.Base.t()
         }
 
   @spec new(integer, String.t()) :: t()
   def new(interval, secret) do
-    %Totp{interval: interval, base: Base.new(secret)}
+    %Totp{interval: interval, base: ExOtp.Base.new(secret)}
   end
 
   @spec validate(t()) :: no_return() | t()
@@ -37,7 +37,7 @@ defmodule ExOtp.Totp do
   # TODO: Add support for NaiveDateTime
   @spec at(t(), DateTime.t(), integer) :: String.t()
   def at(%Totp{base: base, interval: interval}, for_time, counter \\ 0) do
-    Base.generate_otp(
+    ExOtp.Base.generate_otp(
       base,
       for_time
       |> DateTime.to_unix()
@@ -61,7 +61,7 @@ defmodule ExOtp.Totp do
 
   @spec provision_uri(t(), String.t(), keyword()) :: String.t()
   def provision_uri(%Totp{} = totp, label, opts \\ []) do
-    params = [{:secret, totp.base.secret} | opts]
+    params = [{:secret, Base.decode32!(totp.base.secret)} | opts]
     "otpauth://totp/#{label}?#{URI.encode_query(params, :rfc3986)}"
   end
 end

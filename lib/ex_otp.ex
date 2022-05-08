@@ -87,7 +87,7 @@ defmodule ExOtp do
       raise Errors.InvalidParam, "secret length should be atleast 16 characters"
     end
 
-    for _ <- 1..length, into: "", do: <<Enum.random('0123456789abcdef')>>
+    for _ <- 1..length, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
   end
 
   @spec create_totp(String.t(), integer()) :: Totp.t()
