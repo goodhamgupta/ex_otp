@@ -4,6 +4,8 @@ defmodule ExOtp do
   """
   alias ExOtp.{Errors, Hotp, Totp}
 
+  require Logger
+
   @spec random_secret(integer()) :: no_return() | bitstring
   def random_secret(length \\ 16) do
     if length < 16 do
@@ -53,12 +55,13 @@ defmodule ExOtp do
     Hotp.provision_uri(hotp, label, opts)
   end
 
-  def generate_qr_code(input) do
-    unless Code.ensure_loaded?(EQRCode) do
+  def generate_qr_code(input, filename \\ "code.svg") do
+    unless Code.ensure_compiled(EQRCode) do
       raise Errors.MissingDependency,
             "Please install the optional depndency EQRCode to generate the QR code"
     end
 
-    input |> EQRCode.encode() |> EQRCode.svg()
+    input |> EQRCode.encode() |> EQRCode.svg() |> (&File.write!(filename, &1)).()
+    Logger.info("QR code written to file: #{filename}")
   end
 end
