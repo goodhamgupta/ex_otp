@@ -17,13 +17,13 @@ defmodule ExOtp do
   - You can create a TOTP object using either a random secret or  a user-provided secret as follows:
 
       secret = ExOtp.random_secret()
-      #=> "a9a2b4c557cd0f7f"
+      #=> "uapgaiacdaptafbu"
       totp = ExOtp.create_totp(secret, 30) # Specify interval for which the OTP will be valid.
       #=> %ExOtp.Totp{
       #  base: %ExOtp.Base{
       #    digest: :sha,
       #    digits: 6,
-      #    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
+      #    secret: "OVQXAZ3BNFQWGZDBOB2GCZTCOU======"
       #  },
       #  interval: 30
       #}
@@ -43,16 +43,16 @@ defmodule ExOtp do
   - Create a HOTP object using either a random secret or  a user-provided secret as follows:
 
       secret = ExOtp.random_secret()
-      #=> "a9a2b4c557cd0f7f"
-      totp = ExOtp.create_hotp(secret, 30) # Specify initial count
+      #=> "uapgaiacdaptafbu"
+      hotp = ExOtp.create_hotp(secret, 30) # Specify initial count
       #=> %ExOtp.Hotp{
       #  base: %ExOtp.Base{
       #    digest: :sha,
       #    digits: 6,
-      #    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
+      #    secret: "OVQXAZ3BNFQWGZDBOB2GCZTCOU======"
       #  },
       #  initial_count: 0
-      }
+      #}
 
   - Generate an otp using the `hotp` object, for a given datetime value:
 
@@ -72,8 +72,8 @@ defmodule ExOtp do
 
 
       totp
-      |> ExOtp.provision_uri_totp(otp, name: "shubham@google.com",issuer_name: "Test Application")
-      |> ExOtp.generate_qr_code()
+      |> ExOtp.provision_uri_totp(otp, "test:shubham@google.com",issuer_name: "test")
+      |> ExOtp.generate_qr_code("code.svg")
       #=> 09:51:17.102 [info]  QR code written to file: code.svg
 
   """
