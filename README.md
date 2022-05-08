@@ -32,13 +32,13 @@ secret = ExOtp.random_secret()
 #=> "a9a2b4c557cd0f7f"
 totp = ExOtp.create_totp(secret, 30) # Specify interval for which the OTP will be valid.
 #=> %ExOtp.Totp{
-  base: %ExOtp.Base{
-    digest: :sha,
-    digits: 6,
-    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
-  },
-  interval: 30
-} 
+#  base: %ExOtp.Base{
+#    digest: :sha,
+#    digits: 6,
+#    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
+#  },
+#  interval: 30
+#}
 ```
 
 - You can then generate an otp using the `totp` object, for a given datetime value:
@@ -62,12 +62,12 @@ secret = ExOtp.random_secret()
 #=> "a9a2b4c557cd0f7f"
 totp = ExOtp.create_hotp(secret, 30) # Specify initial count 
 #=> %ExOtp.Hotp{
-  base: %ExOtp.Base{
-    digest: :sha,
-    digits: 6,
-    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
-  },
-  initial_count: 0
+#  base: %ExOtp.Base{
+#    digest: :sha,
+#    digits: 6,
+#    secret: "ME4WCMTCGRRTKNJXMNSDAZRXMY======"
+#  },
+#  initial_count: 0
 } 
 ```
 
