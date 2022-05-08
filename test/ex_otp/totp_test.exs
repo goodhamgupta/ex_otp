@@ -2,12 +2,14 @@ defmodule ExOtp.Totp.Test do
   use ExUnit.Case
   alias ExOtp.Totp
 
+  @default_time ~U[2022-05-07 03:33:12.469370Z]
+
   test "generates otp for given unix timestamp" do
     otp =
       30
       |> Totp.new("secret_key")
       |> Totp.validate()
-      |> Totp.at(~U[2022-05-07 03:33:12.469370Z] |> DateTime.to_unix())
+      |> Totp.at(@default_time)
 
     assert otp == "446933"
   end
@@ -18,10 +20,9 @@ defmodule ExOtp.Totp.Test do
       |> Totp.new("secret_key")
       |> Totp.validate()
 
-    time = ~U[2022-05-07 03:33:12.469370Z]
-    otp = Totp.at(totp, time |> DateTime.to_unix())
+    otp = Totp.at(totp, @default_time)
 
-    assert Totp.valid?(totp, otp, time)
+    assert Totp.valid?(totp, otp, @default_time)
   end
 
   test "returns false if given otp is invalid" do
@@ -30,9 +31,6 @@ defmodule ExOtp.Totp.Test do
       |> Totp.new("secret_key")
       |> Totp.validate()
 
-    time = ~U[2022-05-07 03:33:12.469370Z]
-    otp = "123456"
-
-    assert not Totp.valid?(totp, otp, time)
+    assert not Totp.valid?(totp, "123456", @default_time)
   end
 end
