@@ -10,6 +10,8 @@ The library provides the following features:
 - Generate QR codes for OTPs
 - Generate random secret values(if required)
 
+The full documentation is available [here](https://hexdocs.pm/ex_otp/).
+
 ## Installation
 
 You can install `ex_otp` by adding it to your list of dependencies in `mix.exs`:

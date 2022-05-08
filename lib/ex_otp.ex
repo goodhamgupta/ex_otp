@@ -14,7 +14,9 @@ defmodule ExOtp do
 
   ### TOTP
 
-  - You can create a TOTP object using either a random secret or  a user-provided secret as follows:
+  - Create a TOTP object using either a random secret or  a user-provided secret as follows:
+
+  Example:
 
       secret = ExOtp.random_secret()
       #=> "uapgaiacdaptafbu"
@@ -28,12 +30,16 @@ defmodule ExOtp do
       #  interval: 30
       #}
 
-  - You can then generate an otp using the `totp` object, for a given datetime value:
+  - Generate an otp using the `totp` object, for a given datetime value:
+
+  Example:
 
       otp = ExOtp.generate_totp(totp, DateTime.utc_now())
       #=> "967372"
 
   - Finally, you can check if the otp is valid using the `otp` and `totp` objects:
+
+  Example:
 
       ExOtp.valid_totp?(totp, otp, DateTime.utc_now())
       #=> true
@@ -41,6 +47,8 @@ defmodule ExOtp do
   ### HOTP
 
   - Create a HOTP object using either a random secret or  a user-provided secret as follows:
+
+  Example:
 
       secret = ExOtp.random_secret()
       #=> "uapgaiacdaptafbu"
@@ -56,10 +64,14 @@ defmodule ExOtp do
 
   - Generate an otp using the `hotp` object, for a given datetime value:
 
+  Example:
+
       otp = ExOtp.generate_hotp(hotp, DateTime.utc_now())
       #=> "268374"
 
   - Finally, you can check if the otp is valid using the `otp` and `hotp` objects:
+
+  Example:
 
       ExOtp.valid_hotp?(hotp, otp, 0) # Specify counter value
       #=> true
@@ -70,6 +82,7 @@ defmodule ExOtp do
   - Generate the QR code using the `EQRCode` libraby, which is an optional dependency.
   - Given a `totp` object and an `otp`, you can generate the QR code using:
 
+  Example:
 
       totp
       |> ExOtp.provision_uri_totp(otp, "test:shubham@google.com",issuer_name: "test")

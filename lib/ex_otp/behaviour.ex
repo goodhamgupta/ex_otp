@@ -1,6 +1,6 @@
 defmodule ExOtp.Behaviour do
   @moduledoc """
-  This module implements the behaviour for all events.
+  This module implements the behaviour OTP classes.
   """
 
   alias ExOtp.{Hotp, Totp}
