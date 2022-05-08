@@ -98,6 +98,13 @@ totp
 #=> 09:51:17.102 [info]  QR code written to file: code.svg
 ```
 
+### Coverage
+
+- Generate the coverage report using following mix task:
+```elixir
+MIX_ENV=test mix excoveralls
+```
+
 ## Credits
 - [PyOTP](https://github.com/pyauth/pyotp) - The API and implementation is largely based on PyOTP.
 - [Nimble TOTP](https://github.com/dashbitco/nimble_totp) by Dashbit.
