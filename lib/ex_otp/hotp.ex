@@ -3,6 +3,8 @@ defmodule ExOtp.Hotp do
   Module for the HMAC based One-time Password algorithm.
   """
 
+  @behaviour ExOtp.Behaviour
+
   alias ExOtp.{Base, Errors}
   alias __MODULE__
 

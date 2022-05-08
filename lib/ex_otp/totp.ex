@@ -3,6 +3,8 @@ defmodule ExOtp.Totp do
   Module for the Time-based One-time Password algorithm.
   """
 
+  @behaviour ExOtp.Behaviour
+
   alias ExOtp.{Base, Errors}
   alias __MODULE__
 
@@ -32,6 +34,7 @@ defmodule ExOtp.Totp do
 
   def validate(totp), do: totp
 
+  # TODO: Add support for NaiveDateTime
   @spec at(t(), DateTime.t(), integer) :: String.t()
   def at(%Totp{base: base, interval: interval}, for_time, counter \\ 0) do
     Base.generate_otp(
