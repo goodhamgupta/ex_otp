@@ -61,28 +61,29 @@ ExOtp.valid_totp?(totp, otp, DateTime.utc_now())
 - Create a HOTP object using either a random secret or  a user-provided secret as follows:
 ```elixir
 secret = ExOtp.random_secret()
+counter = 30
 #=> "uapgaiacdaptafbu"
-totp = ExOtp.create_hotp(secret, 30) # Specify initial count 
+hotp = ExOtp.create_hotp(secret, counter) # Specify initial count 
 #=> %ExOtp.Hotp{
 #  base: %ExOtp.Base{
 #    digest: :sha,
 #    digits: 6,
 #    secret: "OVQXAZ3BNFQWGZDBOB2GCZTCOU======"
 #  },
-#  initial_count: 0
+#  initial_count: 30
 #}
 ```
 
 - Generate an otp using the `hotp` object, for a given datetime value:
 ```elixir
-otp = ExOtp.generate_hotp(hotp, DateTime.utc_now())
+otp = ExOtp.generate_hotp(hotp, counter)
 #=> "268374"
 ```
 
 - Finally, you can check if the otp is valid using the `otp` and `hotp` objects:
 
 ```elixir
-ExOtp.valid_hotp?(hotp, otp, 0) # Specify counter value
+ExOtp.valid_hotp?(hotp, otp, counter) # Specify counter value
 #=> true
 ```
 
