@@ -6,7 +6,7 @@ defmodule ExOtp.Base do
   alias ExOtp.Errors
   alias Base, as: ElixirBase
 
-  use Bitwise
+  import Bitwise
 
   @keys [
     :secret,
@@ -89,8 +89,8 @@ defmodule ExOtp.Base do
     |> bor((one &&& 0xFF) <<< 16)
     |> bor((two &&& 0xFF) <<< 8)
     |> bor(three &&& 0xFF)
-    # Round is required to convert float to integer
-    |> rem(:math.pow(10, digits) |> round())
+    # Floor is required to convert float to integer
+    |> rem(:math.pow(10, digits) |> floor())
   end
 
   # Private API

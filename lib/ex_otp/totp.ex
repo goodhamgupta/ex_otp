@@ -42,7 +42,7 @@ defmodule ExOtp.Totp do
       for_time
       |> DateTime.to_unix()
       |> Kernel./(interval)
-      |> round()
+      |> floor()
       |> Kernel.+(counter)
     )
   end
