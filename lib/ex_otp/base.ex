@@ -6,7 +6,7 @@ defmodule ExOtp.Base do
   alias ExOtp.Errors
   alias Base, as: ElixirBase
 
-  use Bitwise
+  import Bitwise
 
   @keys [
     :secret,
